@@ -15,7 +15,7 @@ public class Television extends Object implements Comparable<Television> {
     private final boolean smart;
 
     public Television(String make, String model, int resolution, int screenSize, boolean smart) {
-        this.fourK = fourK;
+        this.fourK = fourk;
         this.make = make;
         this.model = model;
         this.resolution = resolution;
