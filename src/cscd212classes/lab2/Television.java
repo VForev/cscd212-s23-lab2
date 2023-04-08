@@ -1,4 +1,6 @@
 package cscd212classes.lab2;
+import java.util.Objects;
+
 
 public class Television extends Object implements Comparable<Television> {
 
@@ -14,8 +16,13 @@ public class Television extends Object implements Comparable<Television> {
 
     private final boolean smart;
 
-    public Television(String make, String model, int resolution, int screenSize, boolean smart) {
-        this.fourK = fourk;
+
+    public Television(final String make, final String model, final int resolution, final int screenSize, final boolean smart) throws IllegalArgumentException {
+
+        if (make == null || make.isEmpty() || model == null || model.isEmpty() || screenSize < 32 || resolution < 720)
+            throw new IllegalArgumentException("Invalid parameter in constructor");
+
+        this.fourK = (resolution == 2160);;
         this.make = make;
         this.model = model;
         this.resolution = resolution;
@@ -23,8 +30,13 @@ public class Television extends Object implements Comparable<Television> {
         this.smart = smart;
     }
 
-    public Television(String make, String model, int resolution, int screenSize, boolean smart) {
-        this.fourK = fourK;
+
+    public Television(final String make, final String model, final boolean smart, final int screenSize, final int resolution) throws IllegalArgumentException {
+
+        if (make == null || make.isEmpty() || model == null || model.isEmpty() || screenSize < 32 || resolution < 720)
+            throw new IllegalArgumentException("Invalid parameter in constructor");
+
+        this.fourK = (resolution == 2160);;
         this.make = make;
         this.model = model;
         this.resolution = resolution;
@@ -51,12 +63,46 @@ public class Television extends Object implements Comparable<Television> {
 
 
     @Override
-    public int hashCode() {
-        return 0;
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Television that = (Television) o;
+        return this.fourK == that.fourK && this.resolution == that.resolution && this.screenSize == that.screenSize && this.smart == that.smart && Objects.equals(this.make, that.make) && Objects.equals(this.model, that.model);
     }
 
+
     @Override
-    public int compareTo(Television o) {
-        return 0;
+    public int hashCode() {
+        return this.make.hashCode() + this.model.hashCode() + this.resolution + Boolean.hashCode(this.smart) + Boolean.hashCode(this.fourK);
     }
+
+
+    @Override
+    public String toString() {
+        return this.make + "-" +
+                this.model + ", " +
+                this.screenSize + " inch" +
+                (this.smart ? " smart" : "") + " tv with " +
+                (this.fourK ? "4K" : this.resolution) + " resolution";
+    }
+
+
+    @Override
+    public int compareTo(final Television another) throws IllegalArgumentException {
+
+        if (another == null)
+            throw new IllegalArgumentException("null parameter in the compareTo method");
+
+        if (this.make.compareTo(another.make) == 0) {
+            if (this.model.equals(another.model)) {
+                return this.screenSize - another.screenSize;
+            } else {
+                return this.model.compareTo(another.model);
+            }
+        } else {
+            return this.make.compareTo(another.make);
+        }
+
+    }
+
 }
